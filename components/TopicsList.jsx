@@ -7,6 +7,7 @@ import { SITE_URL } from "@/constants/constants";
 const getTopics = async () => {
   try {
     const apiUrl = `${SITE_URL}/api/topics`;
+    console.log('apiUrl' + apiUrl);
     const res = await fetch(apiUrl, {
       cache: "no-store",
     });
