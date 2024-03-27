@@ -9,21 +9,10 @@ ENV MONGO_PASSWORD=$MONGO_PASSWORD_ENV
 ENV SITE_URL_ENV=$SITE_URL_ENV
 
 WORKDIR /app
-
 COPY package*.json ./
-RUN npm install
-
+RUN  npm install --production
 COPY . .
+RUN npm run build
 
-RUN npm run build && npm run satrt
-
-# FROM nginx:alpine
-# RUN rm -rf /usr/share/nginx/html/*
-
-# # Copy built Next.js application and public assets
-# COPY --from=builder /app/.next /usr/share/nginx/html
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-# EXPOSE 80
-
-# CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+CMD ["npm","run", "start"]  # Start the Next.js server in production mode
