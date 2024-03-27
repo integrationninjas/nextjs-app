@@ -9,7 +9,7 @@ const connectMongoDB = async () => {
 
   try {
     const password = encodeURIComponent(process.env.MONGO_PASSWORD.trim());
-    const connectionString = `mongodb+srv://integrationninjas:${password}@test.vjuinp4.mongodb.net/?retryWrites=true&w=majority`; // clustore url
+    const connectionString = `mongodb+srv://integrationninjas:${password}@devcluster.v0pst8x.mongodb.net/?retryWrites=true&w=majority&appName=DevCluster`; // clustore url
     await mongoose.connect(connectionString, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
