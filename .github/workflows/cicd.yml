@@ -1,0 +1,32 @@
+name: Deploy Next.js application
+
+on:
+  push:
+    branches:
+      - deploy-with-docker-ec2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout Source
+        uses: actions/checkout@v4
+      - name: Create .env file
+        run: echo "MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env && echo "SITE_URL=${{ secrets.SITE_URL }}" >> .env
+      - name: Build docker image
+        run: docker build -t integrationninjas/nextjs-app .
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Publish image to docker hub
+        run: docker push integrationninjas/nextjs-app:latest
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull integrationninjas/nextjs-app:latest
+      - name: Delete old container
+        run: docker rm -f nextjs-app-container  
+      - name: Run docker container
+        run: docker run -d -p 3000:3000 --name nextjs-app-container integrationninjas/nextjs-app 
